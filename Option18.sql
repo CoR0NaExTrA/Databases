@@ -1,3 +1,4 @@
+USE Theatre
 IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='Theatre')
 	CREATE TABLE dbo.Theatre(
 		theatre_id INT IDENTITY(1,1) NOT NULL,
@@ -72,7 +73,7 @@ IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='Play')
 		author_id INT NOT NULL,
 		performance_id INT NOT NULL,
 
-		CONSTRAINT PK_theatre_theatre_id PRIMARY KEY (play_id),
+		CONSTRAINT PK_play_play_id PRIMARY KEY (play_id),
 		CONSTRAINT FK_play_author_id 
 			FOREIGN KEY (author_id) REFERENCES dbo.Author(author_id),
 		CONSTRAINT FK_play_performance_id 
@@ -132,3 +133,5 @@ VALUES
 	('Echo of the Past', '30/08/1998', '2', '4'),
 	('On the Wings of A Dream', '17/02/1982', '3', '5'),
 	('Intricate Pattern', '11/05/1999', '4', '6');
+
+SELECT * FROM dbo.Theatre;
