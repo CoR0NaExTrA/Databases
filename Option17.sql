@@ -1,5 +1,4 @@
-USE [Ñriminal law]
-
+USE [Criminal law]
 IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='Article')
 	CREATE TABLE dbo.Article(
 		article_id INT IDENTITY(1,1) NOT NULL,
@@ -32,11 +31,14 @@ IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='Crime')
 		crime_title NVARCHAR(50) NOT NULL,
 		crime_punishment NVARCHAR(50) NOT NULL,
 		article_id INT NOT NULL,
+		lawyer_id INT NOT NULL,
 		crime_number NVARCHAR(50) NOT NULL,
 
 		CONSTRAINT PK_crime_crime_id PRIMARY KEY (crime_id),
 		CONSTRAINT FK_crime_article_id
-			FOREIGN KEY (crime_id) REFERENCES dbo.Article(article_id)
+			FOREIGN KEY (article_id) REFERENCES dbo.Article(article_id),
+		CONSTRAINT FK_crime_lawyer_id
+			FOREIGN KEY (lawyer_id) REFERENCES dbo.Lawyer(lawyer_id)
 	)
 
 IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='Recidivist')
@@ -51,7 +53,7 @@ IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='Recidivist')
 
 		CONSTRAINT PK_recidivist_recidivist_id PRIMARY KEY (recidivist_id),
 		CONSTRAINT FK_recidivist_crime_id 
-			FOREIGN KEY (recidivist_id) REFERENCES dbo.Crime(crime_id)
+			FOREIGN KEY (crime_id) REFERENCES dbo.Crime(crime_id)
 	)
 
 IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='Incarceration')
@@ -65,7 +67,7 @@ IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='Incarceration')
 
 		CONSTRAINT PK_incarceration_incarceration_id PRIMARY KEY (incarceration_id),
 		CONSTRAINT FK_incarceration_recidivist_id 
-			FOREIGN KEY (incarceration_id) REFERENCES dbo.Recidivist(recidivist_id)
+			FOREIGN KEY (recidivist_id) REFERENCES dbo.Recidivist(recidivist_id)
 	)
 
 
@@ -87,14 +89,14 @@ VALUES
 	('Tatjana', 'Buckley', '07/10/1986', '411793', '9(811)669-84-11'),
 	('Moriko', 'Tietjens', '03/05/2000', '193447', '7(1232)584-80-79');
 
-INSERT INTO dbo.Crime (crime_title, crime_punishment, article_id, crime_number)
+INSERT INTO dbo.Crime (crime_title, crime_punishment, article_id, crime_number, lawyer_id)
 VALUES 
-	('Theft', '5 years', '1', '426406'),
-	('Fraud', '4 years', '2', '130600'),
-	('Bribe', '2 years', '3', '667972'),
-	('Forgery of documents', '4 years', '4', '619259'),
-	('Hooliganism', '7 years', '5', '538007'),
-	('Illegal drug trafficking', '15 years', '6', '064928');
+	('Theft', '5 years', '1', '426406', '5'),
+	('Fraud', '4 years', '2', '130600', '2'),
+	('Bribe', '2 years', '3', '667972', '4'),
+	('Forgery of documents', '4 years', '4', '619259', '3'),
+	('Hooliganism', '7 years', '5', '538007', '1'),
+	('Illegal drug trafficking', '15 years', '6', '064928', '6');
 
 INSERT INTO dbo.Recidivist (recidivist_name, recidivist_surname, recidivist_birthdate, recidivist_gender, crime_id)
 VALUES 
@@ -114,4 +116,4 @@ VALUES
 	('22/03/2014', '22/03/2021', '4', 'Dark Canyon'),
 	('27/02/2013', '27/02/2028', '3', 'Fortress of Fortua');
 
-SELECT * FROM dbo.Article;
+SELECT * FROM dbo.Lawyer;

@@ -1,16 +1,4 @@
 USE Theatre
-IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='Theatre')
-	CREATE TABLE dbo.Theatre(
-		theatre_id INT IDENTITY(1,1) NOT NULL,
-
-		theatre_name NVARCHAR(50) NOT NULL,
-		theatre_type NVARCHAR(50) NOT NULL,
-		theatre_number NVARCHAR(50) NOT NULL,
-		theatre_isOpen BIT NOT NULL,
-
-		CONSTRAINT PK_theatre_theatre_id PRIMARY KEY (theatre_id)
-	)
-
 IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='Director')
 	CREATE TABLE dbo.Director(
 		director_id INT IDENTITY(1,1) NOT NULL,
@@ -49,6 +37,21 @@ IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='Author')
 		CONSTRAINT PK_author_author_id PRIMARY KEY (author_id)
 	)
 
+
+IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='Play')
+	CREATE TABLE dbo.Play(
+		play_id INT IDENTITY(1,1) NOT NULL,
+
+		play_name NVARCHAR(50) NOT NULL,
+		play_creating DATETIME NOT NULL,
+		author_id INT NOT NULL,
+
+		CONSTRAINT PK_play_play_id PRIMARY KEY (play_id),
+		CONSTRAINT FK_play_author_id 
+			FOREIGN KEY (author_id) REFERENCES dbo.Author(author_id)
+	)
+
+
 IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='Performance')
 	CREATE TABLE dbo.Performance(
 		performance_id INT IDENTITY(1,1) NOT NULL,
@@ -58,36 +61,30 @@ IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='Performance')
 		performance_premiere DATETIME NOT NULL,
 		actor_id INT NOT NULL,
 		director_id INT NOT NULL,
+		play_id INT NOT NULL,
 
 		CONSTRAINT PK_performance_performance_id PRIMARY KEY (performance_id),
+		CONSTRAINT FK_performance_actor_id 
+			FOREIGN KEY (performance_id) REFERENCES dbo.Actor(actor_id),
 		CONSTRAINT FK_performance_director_id 
-			FOREIGN KEY (director_id) REFERENCES dbo.Director(director_id)
+			FOREIGN KEY (performance_id) REFERENCES dbo.Director(director_id),
+		CONSTRAINT FK_performance_play_id 
+			FOREIGN KEY (play_id) REFERENCES dbo.Play(play_id)
 	)
 
-IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='Play')
-	CREATE TABLE dbo.Play(
-		play_id INT IDENTITY(1,1) NOT NULL,
+IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='Theatre')
+	CREATE TABLE dbo.Theatre(
+		theatre_id INT IDENTITY(1,1) NOT NULL,
 
-		play_name NVARCHAR(50) NOT NULL,
-		play_creating DATETIME NOT NULL,
-		author_id INT NOT NULL,
+		theatre_name NVARCHAR(50) NOT NULL,
+		theatre_type NVARCHAR(50) NOT NULL,
+		theatre_number NVARCHAR(50) NOT NULL,
 		performance_id INT NOT NULL,
 
-		CONSTRAINT PK_play_play_id PRIMARY KEY (play_id),
-		CONSTRAINT FK_play_author_id 
-			FOREIGN KEY (author_id) REFERENCES dbo.Author(author_id),
-		CONSTRAINT FK_play_performance_id 
+		CONSTRAINT PK_theatre_theatre_id PRIMARY KEY (theatre_id),
+		CONSTRAINT FK_theatre_performance_id 
 			FOREIGN KEY (performance_id) REFERENCES dbo.Performance(performance_id)
 	)
-
-INSERT INTO dbo.Theatre (theatre_name, theatre_type, theatre_number, theatre_isOpen)
-VALUES 
-	('Art Palace', 'dramatic', '459499', 'true'),
-	('Magical Scene', 'puppet', '993927', 'false'),
-	('Paradise Theater', 'opera and ballet', '560045', 'true'),
-	('Epicenter Theater', 'comedy', '226727', 'false'),
-	('Drama Academy', 'dramatic', '724000', 'false'),
-	('Ramp Light', 'comedy', '137476', 'true');
 
 INSERT INTO dbo.Director (director_name,  director_surname, director_birthdate, director_number)
 VALUES 
@@ -125,13 +122,23 @@ VALUES
 	('Beyond the Past', 'comedy', '22/03/2025', '4', '1'),
 	('Faces Without Faces', 'comedy', '27/02/2025', '3', '2');
 
-INSERT INTO dbo.Play (play_name, play_creating, author_id, performance_id)
+INSERT INTO dbo.Play (play_name, play_creating, author_id)
 VALUES 
-	('Light and Darkness', '22/07/1989', '1', '1'),
-	('Web of Illusions', '07/03/1984', '6', '2'),
-	('Peaks of Hope', '13/04/1989', '5', '3'),
-	('Echo of the Past', '30/08/1998', '2', '4'),
-	('On the Wings of A Dream', '17/02/1982', '3', '5'),
-	('Intricate Pattern', '11/05/1999', '4', '6');
+	('Light and Darkness', '22/07/1989', '1'),
+	('Web of Illusions', '07/03/1984', '6'),
+	('Peaks of Hope', '13/04/1989', '5'),
+	('Echo of the Past', '30/08/1998', '2'),
+	('On the Wings of A Dream', '17/02/1982', '3'),
+	('Intricate Pattern', '11/05/1999', '4');
 
-SELECT * FROM dbo.Theatre;
+INSERT INTO dbo.Theatre (theatre_name, theatre_type, theatre_number, performance_id)
+VALUES 
+	('Art Palace', 'dramatic', '459499', '3'),
+	('Magical Scene', 'puppet', '993927', '1'),
+	('Paradise Theater', 'opera and ballet', '560045', '4'),
+	('Epicenter Theater', 'comedy', '226727', '5'),
+	('Drama Academy', 'dramatic', '724000', '2'),
+	('Ramp Light', 'comedy', '137476', '6');
+
+
+SELECT * FROM dbo.Actor;
