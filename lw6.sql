@@ -103,3 +103,53 @@ JOIN dbo.room_in_booking rib2
     AND rib1.checkout_date > rib2.checkin_date  -- Пересечение по датам
 --WHERE rib1.id_room_in_booking = 5 OR rib2.id_room_in_booking = 2154
 ORDER BY rib1.id_room, rib1.checkin_date;
+
+--8. Создать бронирование в транзакции.--
+BEGIN TRANSACTION;
+
+DECLARE @id_booking INT;
+
+BEGIN TRY
+    -- Создаем бронирование
+    INSERT INTO dbo.booking (id_client, booking_date)
+    VALUES (1, GETDATE());  -- Меняй id_client на реального клиента
+
+    SET @id_booking = SCOPE_IDENTITY();
+
+    -- Проверяем доступность номера
+    IF EXISTS (
+        SELECT 1 FROM dbo.room_in_booking
+        WHERE id_room = 3  -- Меняй на реальный номер комнаты
+        AND GETDATE() BETWEEN checkin_date AND checkout_date
+    )
+    BEGIN
+        RAISERROR('Номер уже занят!', 16, 1);
+    END
+
+    -- Добавляем номер в бронирование
+    INSERT INTO dbo.room_in_booking (id_booking, id_room, checkin_date, checkout_date)
+    VALUES (@id_booking, 3, '2025-05-15', '2025-05-20');  -- Меняй даты
+
+    COMMIT TRANSACTION;
+    PRINT 'Бронирование успешно!';
+END TRY
+BEGIN CATCH
+    ROLLBACK TRANSACTION;
+    PRINT 'Ошибка при бронировании!';
+END CATCH;
+
+--9. Добавить необходимые индексы для всех таблиц.--
+-- Индекс на связи клиента с бронированием--
+CREATE INDEX idx_booking_client ON dbo.booking(id_client);
+
+-- Индекс на связи номера с отелем--
+CREATE INDEX idx_room_hotel ON dbo.room(id_hotel);
+
+-- Индекс на связь комнаты с категорией--
+CREATE INDEX idx_room_category ON dbo.room(id_room_category);
+
+-- Индекс на `room_in_booking`, чтобы ускорить поиск номеров по датам--
+CREATE INDEX idx_room_in_booking_dates ON dbo.room_in_booking(id_room, checkin_date, checkout_date);
+
+-- Индекс на `booking_date` для ускорения поиска бронирований по датам--
+CREATE INDEX idx_booking_date ON dbo.booking(booking_date);
