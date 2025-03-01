@@ -1,7 +1,7 @@
 USE Pharmacy
 
 --1. Добавить внешних ключей
-/* ALTER TABLE dbo.dealer
+ALTER TABLE dbo.dealer
 ADD CONSTRAINT FK_dealer_company
 	FOREIGN KEY (id_company) REFERENCES dbo.company(id_company);
 
@@ -20,7 +20,7 @@ ADD CONSTRAINT FK_order_dealer
 	FOREIGN KEY (id_dealer) REFERENCES dbo.dealer(id_dealer);
 ALTER TABLE dbo.[order]
 ADD CONSTRAINT FK_order_pharmacy
-	FOREIGN KEY (id_pharmacy) REFERENCES dbo.pharmacy(id_pharmacy); */
+	FOREIGN KEY (id_pharmacy) REFERENCES dbo.pharmacy(id_pharmacy);
 
 --2. Выдать информацию по всем заказам лекарствам “Кордерон” компании “Аргус”--
 --с указанием названий аптек, дат, объема заказов.--
@@ -42,11 +42,8 @@ SELECT
 FROM dbo.medicine m
 JOIN dbo.production p ON m.id_medicine = p.id_medicine
 JOIN dbo.company c ON p.id_company = c.id_company
-LEFT JOIN dbo.[order] o ON p.id_production = o.id_production 
-                          AND o.date < '2025-01-25'
-WHERE 
-    c.name = 'Фарма'
-    AND o.id_order IS NULL;
+LEFT JOIN dbo.[order] o ON p.id_production = o.id_production AND o.date < '2025-01-25'
+WHERE c.name = 'Фарма' AND o.id_order IS NULL;
 
 
 --4. Дать минимальный и максимальный баллы лекарств каждой фирмы, которая--
