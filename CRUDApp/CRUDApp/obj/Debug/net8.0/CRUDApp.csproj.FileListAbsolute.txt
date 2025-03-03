@@ -160,3 +160,4 @@ C:\Users\Zzenam\source\repos\CRUDApp\CRUDApp\bin\Debug\net8.0\Infrastructure.dll
 C:\Users\Zzenam\source\repos\CRUDApp\CRUDApp\bin\Debug\net8.0\Infrastructure.pdb
 C:\Users\Zzenam\source\repos\CRUDApp\CRUDApp\bin\Debug\net8.0\Domain.pdb
 C:\Users\Zzenam\source\repos\CRUDApp\CRUDApp\obj\Debug\net8.0\CRUDApp.csproj.Up2Date
+C:\Users\Zzenam\source\repos\CRUDApp\CRUDApp\bin\Debug\net8.0\Spectre.Console.dll
