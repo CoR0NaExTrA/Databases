@@ -26,24 +26,24 @@ USE University
 
 --2. Выдать оценки студентов по информатике если они обучаются данному--
 --предмету. Оформить выдачу данных с использованием view.--
---GO
---CREATE VIEW v_marks_informatics AS
---SELECT 
---    s.id_student, 
---    s.name AS student_name, 
---    g.name AS group_name, 
---    subj.name AS subject_name, 
---    t.name AS teacher_name, 
---    l.date AS lesson_date, 
---    m.mark
---FROM dbo.mark m
---JOIN dbo.lesson l ON m.id_lesson = l.id_lesson
---JOIN dbo.student s ON m.id_student = s.id_student
---JOIN dbo.[group] g ON s.id_group = g.id_group
---JOIN dbo.subject subj ON l.id_subject = subj.id_subject
---JOIN dbo.teacher t ON l.id_teacher = t.id_teacher
---WHERE subj.name = 'Информатика';
---GO
+GO
+CREATE VIEW v_marks_informatics AS
+SELECT 
+    s.id_student, 
+    s.name AS student_name, 
+    g.name AS group_name, 
+    subj.name AS subject_name, 
+    t.name AS teacher_name, 
+    l.date AS lesson_date, 
+    m.mark
+FROM dbo.mark m
+JOIN dbo.lesson l ON m.id_lesson = l.id_lesson
+JOIN dbo.student s ON m.id_student = s.id_student
+JOIN dbo.[group] g ON s.id_group = g.id_group
+JOIN dbo.subject subj ON l.id_subject = subj.id_subject
+JOIN dbo.teacher t ON l.id_teacher = t.id_teacher
+WHERE subj.name = 'Информатика';
+GO
 
 SELECT * FROM v_marks_informatics;
 
@@ -51,23 +51,23 @@ SELECT * FROM v_marks_informatics;
 --предмета. Должниками считаются студенты, не имеющие оценки по предмету,--
 --который ведется в группе. Оформить в виде процедуры, на входе--
 --идентификатор группы.--
---GO
---CREATE PROCEDURE GetDebtorsByGroup
---    @group_id INT
---AS
---BEGIN
---    SET NOCOUNT ON;
+GO
+CREATE PROCEDURE GetDebtorsByGroup
+    @group_id INT
+AS
+BEGIN
+    SET NOCOUNT ON;
 
---    SELECT 
---        s.name AS student_name,
---        subj.name AS subject_name
---    FROM dbo.lesson l
---    JOIN dbo.subject subj ON l.id_subject = subj.id_subject
---    JOIN dbo.student s ON s.id_group = l.id_group
---    LEFT JOIN dbo.mark m ON m.id_lesson = l.id_lesson AND m.id_student = s.id_student
---    WHERE s.id_group = @group_id AND m.id_mark IS NULL;
---END;
---GO
+    SELECT 
+        s.name AS student_name,
+        subj.name AS subject_name
+    FROM dbo.lesson l
+    JOIN dbo.subject subj ON l.id_subject = subj.id_subject
+    JOIN dbo.student s ON s.id_group = l.id_group
+    LEFT JOIN dbo.mark m ON m.id_lesson = l.id_lesson AND m.id_student = s.id_student
+    WHERE s.id_group = @group_id AND m.id_mark IS NULL;
+END;
+GO
 
 EXEC GetDebtorsByGroup @group_id = 1;
 
@@ -99,7 +99,7 @@ SELECT
     s.name AS student_name,
     subj.name AS subject_name,
     l.date AS lesson_date,
-    COALESCE(m.mark, 0) AS mark
+    COALESCE(m.mark, NULL) AS mark
 FROM dbo.student s
 JOIN dbo.[group] g ON s.id_group = g.id_group
 JOIN dbo.lesson l ON g.id_group = l.id_group
@@ -123,8 +123,6 @@ WHERE subj.name = 'БД'
   AND l.date <= '2024-05-12';
 
 --7. Добавить необходимые индексы.--
---Ускорение выборки оценок.--
-CREATE INDEX idx_mark_lesson_student ON dbo.mark(id_lesson, id_student);
 --Быстрый поиск занятий.--
 CREATE INDEX idx_lesson_group_subject_date ON dbo.lesson(id_group, id_subject, date);
 --Ускорение связи студентов и групп.--
