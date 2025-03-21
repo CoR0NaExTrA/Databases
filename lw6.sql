@@ -139,17 +139,19 @@ BEGIN CATCH
 END CATCH;
 
 --9. Добавить необходимые индексы для всех таблиц.--
--- Индекс на связи клиента с бронированием--
+
+-- Индекс на связи клиента с бронированием
 CREATE INDEX idx_booking_client ON dbo.booking(id_client);
 
--- Индекс на связи номера с отелем--
+-- Индекс на связи номера с отелем
 CREATE INDEX idx_room_hotel ON dbo.room(id_hotel);
 
--- Индекс на связь комнаты с категорией--
+-- Индекс на связь комнаты с категорией
 CREATE INDEX idx_room_category ON dbo.room(id_room_category);
 
--- Индекс на `room_in_booking`, чтобы ускорить поиск номеров по датам--
+-- Индекс на `room_in_booking`, чтобы ускорить поиск номеров по датам
 CREATE INDEX idx_room_in_booking_dates ON dbo.room_in_booking(id_room, checkin_date, checkout_date);
 
--- Индекс на `booking_date` для ускорения поиска бронирований по датам--
+-- Индекс на `booking_date` для ускорения поиска бронирований по датам
 CREATE INDEX idx_booking_date ON dbo.booking(booking_date);
+
