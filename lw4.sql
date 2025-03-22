@@ -64,21 +64,21 @@ VALUES
 
 INSERT INTO dbo.Actor
 VALUES
-	('Hedi', 'Milnor', '24/12/1969', '426406', 'Golden Mask 2020'),
-	('Christof', 'Huygens', '14/08/1992', '130600', 'Breakthrough of the year 2018'),
-	('Aretha', 'Germanova', '01/11/2002', '667972', 'Actor of the Year 2020'),
-	('Birgith', 'Sankt', '29/10/1971', '619259', 'Actor of the Year 2018'),
-	('Nahoko', 'Gregory', '07/03/1978', '538007', 'Breakthrough of the year 2023'),
-	('Robert', 'Hamermesh', '28/01/1988', '064928', 'Golden applause 2023');
+	('Hedi', 'Milnor', '24/12/1969', '426406', 'Golden Mask'),
+	('Christof', 'Huygens', '14/08/1992', '130600', 'Breakthrough of the year'),
+	('Aretha', 'Germanova', '01/11/2002', '667972', 'Actor of the Year'),
+	('Birgith', 'Sankt', '29/10/1971', '619259', 'Actor of the Year'),
+	('Nahoko', 'Gregory', '07/03/1978', '538007', 'Breakthrough of the year'),
+	('Robert', 'Hamermesh', '28/01/1988', '064928', 'Golden applause');
 
 INSERT INTO dbo.Author
 VALUES
-	('Sylvia', 'Peclet', '19/08/1965', '774246', 'Golden Feather 2024'),
-	('Andrew', 'Porter', '13/10/1972', '689285', 'Golden Feather 2015'),
-	('Amy', 'Truesdell', '18/12/1959', '177611', 'Generational Inspiration 2015'),
-	('Zinaida', 'Rodionova', '10/06/1978', '507513', 'Play of the Year 2023'),
-	('Sam', 'Goldman', '22/03/1970', '476195', 'Literary masterpiece 2020'),
-	('Darius', 'Vallerius', '04/09/1962', '203569', 'Literary masterpiece 2017');
+	('Sylvia', 'Peclet', '19/08/1965', '774246', 'Golden Feather'),
+	('Andrew', 'Porter', '13/10/1972', '689285', 'Golden Feather'),
+	('Amy', 'Truesdell', '18/12/1959', '177611', 'Generational Inspiration'),
+	('Zinaida', 'Rodionova', '10/06/1978', '507513', 'Play of the Year'),
+	('Sam', 'Goldman', '22/03/1970', '476195', 'Literary masterpiece'),
+	('Darius', 'Vallerius', '04/09/1962', '203569', 'Literary masterpiece');
 
 INSERT INTO dbo.Play
 VALUES
@@ -119,7 +119,7 @@ SELECT * FROM dbo.Theatre;
 USE [Criminal law]
 INSERT INTO dbo.Article (title, article_number, notes)
 VALUES 
-	('Theft', '158', 'Secret theft of other people''s property');
+	('Water pollution', '250', 'Pollution, clogging, depletion of surface or underground waters, sources of drinking water supply');
 
 INSERT INTO dbo.Lawyer (first_name, last_name, date_of_birth, license_number)
 VALUES
@@ -127,15 +127,15 @@ VALUES
 
 INSERT INTO dbo.Crime (title, punishment, article_id, lawyer_id)
 VALUES
-	('Fraud', '4 years', '130600', '2', '2');
+	('Water pollution', '3 years', '7', '7');
 
 INSERT INTO dbo.Recidivist (first_name, last_name, gender, crime_id)
 VALUES
-	('Pavel', 'Lopatinsky', '19/08/2000', 'male', '3');
+	('Svetlana', 'Makarova', 'male', '6');
 
 INSERT INTO dbo.Incarceration (start_at, finish_at, recidivist_id)
 VALUES 
-	('16/03/2020', '16/03/2025', 'Dark Canyon', '6');
+	('16/03/2020', '16/03/2025', '7');
 
 SELECT * FROM dbo.Article;
 SELECT * FROM dbo.Crime;
@@ -150,23 +150,23 @@ VALUES
 
 INSERT INTO dbo.Actor (first_name, last_name, date_of_birth, number_phone)
 VALUES
-	();
+	('Thomas', 'Christoffel', '30/11/1980', '932709');
 
 INSERT INTO dbo.Author (first_name, last_name, number_phone, award)
 VALUES
-	();
+	('Merna', 'Campbel', '01/08/1965', '623822', 'Golden Feather');
 
 INSERT INTO dbo.Play (title, creating_at)
 VALUES
-	();
+	('Mortal', '22/07/1995', '7');
 
 INSERT INTO dbo.Performance (title, style, premiere_at, actor_id, play_id)
 VALUES
-	();
+	('Mortal fear', 'drama', '20/04/2025', '5', '7');
 
 INSERT INTO dbo.Theatre (title, number_phone, performance_id)
 VALUES
-	();
+	('Shoumas', 'dramatic', '328195', '7');
 
 SELECT * FROM dbo.Actor;
 SELECT * FROM dbo.Author;
@@ -178,9 +178,11 @@ SELECT * FROM dbo.Theatre;
 --c) INSERT с чтением из другой таблицы--
 USE [Criminal law]
 INSERT INTO dbo.Recidivist(first_name, last_name) SELECT first_name, last_name FROM dbo.Lawyer
+SELECT * FROM dbo.Recidivist;
 
 USE Theatre
 INSERT INTO dbo.Director(first_name, last_name) SELECT first_name, last_name FROM dbo.Actor
+SELECT * FROM dbo.Director;
 
 --3.2 DELETE--
 --a) DELETE всех записей--
@@ -218,11 +220,12 @@ VALUES
 	('Fraud', '159', 'Theft of property by deception or abuse of trust', '10 years');
 
 USE Theatre
-DELETE FROM dbo.Author WHERE award = 'Golden Feather 2015'
+DELETE FROM dbo.Author WHERE award = 'Golden Feather'
 SELECT * FROM dbo.Author
 INSERT INTO dbo.Author (first_name, last_name, date_of_birth, number_phone, award)
 VALUES
-	('Andrew', 'Porter', '13/10/1972', '689285', 'Golden Feather 2015');
+	('Sylvia', 'Peclet', '19/08/1965', '774246', 'Golden Feather'),
+	('Andrew', 'Porter', '13/10/1972', '689285', 'Golden Feather');
 
 --3.3 UPDATE--
 --a) UPDATE всех записей--
@@ -449,12 +452,187 @@ HAVING COUNT(*) > 1;
 
 --3.9. SELECT JOIN--
 --a) LEFT JOIN двух таблиц и WHERE по одному из атрибутов--
+USE [Criminal law]
+SELECT 
+    r.recidivist_id, 
+    r.first_name, 
+    r.last_name, 
+    r.gender, 
+    c.title AS crime_title
+FROM dbo.Recidivist r
+LEFT JOIN dbo.Crime c ON r.crime_id = c.crime_id
+WHERE r.gender = 'male';
+
+USE Theatre
+SELECT 
+    t.theatre_id, 
+    t.title AS theatre_name, 
+    t.style, 
+    p.title AS performance_title
+FROM dbo.Theatre t
+LEFT JOIN dbo.Performance p ON t.performance_id = p.performance_id
+WHERE t.style = 'dramatic';
+
 --b) RIGHT JOIN. Получить такую же выборку, как и в 3.9a--
+USE [Criminal law]
+SELECT 
+    r.recidivist_id, 
+    r.first_name, 
+    r.last_name, 
+    r.gender, 
+    c.title AS crime_title
+FROM dbo.Crime c
+RIGHT JOIN dbo.Recidivist r ON r.crime_id = c.crime_id
+WHERE r.gender = 'male';
+
+USE Theatre
+SELECT 
+    t.theatre_id, 
+    t.title AS theatre_name, 
+    t.style, 
+    p.title AS performance_title
+FROM dbo.Performance p
+RIGHT JOIN dbo.Theatre t ON t.performance_id = p.performance_id
+WHERE t.style = 'dramatic';
+
 --c) LEFT JOIN трех таблиц + WHERE по атрибуту из каждой таблицы--
+USE [Criminal law]
+SELECT 
+    r.recidivist_id, 
+    r.first_name, 
+    r.last_name, 
+    r.gender, 
+    c.title AS crime_title, 
+    c.punishment, 
+    l.first_name AS lawyer_first_name, 
+    l.last_name AS lawyer_last_name
+FROM dbo.Recidivist r
+LEFT JOIN dbo.Crime c ON r.crime_id = c.crime_id
+LEFT JOIN dbo.Lawyer l ON c.lawyer_id = l.lawyer_id
+WHERE r.gender = 'female' 
+  AND c.punishment LIKE '%years'
+  AND l.last_name = 'Johnson';
+
+USE Theatre
+SELECT 
+    p.performance_id, 
+    p.title AS performance_title, 
+    p.style, 
+    a.first_name AS actor_first_name, 
+    a.last_name AS actor_last_name, 
+    d.first_name AS director_first_name, 
+    d.last_name AS director_last_name
+FROM dbo.Performance p
+LEFT JOIN dbo.Actor a ON p.actor_id = a.actor_id
+LEFT JOIN dbo.Director d ON p.director_id = d.director_id
+WHERE p.style = 'ballet' 
+  AND a.first_name = 'Michael' 
+  AND d.last_name = 'Williams';
+
 --d) INNER JOIN двух таблиц--
+USE [Criminal law]
+SELECT 
+    c.crime_id, 
+    c.title AS crime_title, 
+    c.punishment, 
+    a.article_id, 
+    a.title
+FROM dbo.Crime c
+INNER JOIN dbo.Article a ON c.article_id = a.article_id;
+
+USE Theatre
+SELECT 
+    p.performance_id, 
+    p.title AS performance_title, 
+    p.style, 
+    pl.play_id, 
+    pl.title
+FROM dbo.Performance p
+INNER JOIN dbo.Play pl ON p.play_id = pl.play_id;
 
 --3.10. Подзапросы--
 --a) Написать запрос с условием WHERE IN (подзапрос)--
+USE [Criminal law]
+SELECT prison 
+FROM dbo.Incarceration 
+WHERE recidivist_id IN (
+  SELECT recidivist_id
+  FROM dbo.Recidivist 
+  WHERE last_name LIKE 'M%'
+);
+
+USE Theatre
+SELECT title 
+FROM dbo.Theatre 
+WHERE performance_id IN (
+  SELECT performance_id
+  FROM dbo.Performance
+  WHERE title LIKE 'S%'
+);
+
 --b) Написать запрос SELECT atr1, atr2, (подзапрос) FROM ...--
+USE [Criminal law]
+SELECT 
+  title, 
+  article_number, 
+  (
+    SELECT COUNT(*) 
+    FROM STRING_SPLIT(notes, ' ')
+  ) AS word_count
+FROM dbo.Article
+
+USE Theatre
+SELECT 
+  title, 
+  YEAR(creating_at) AS creating_year, 
+  (
+    SELECT YEAR(CURRENT_TIMESTAMP) - YEAR(creating_at)
+  ) AS years_since_creating
+FROM dbo.Play;
+
 --c) Написать запрос вида SELECT * FROM (подзапрос)--
+USE [Criminal law]
+SELECT * 
+FROM (
+  SELECT 
+    first_name, 
+    last_name, 
+    date_of_birth, 
+    license_number
+  FROM dbo.Lawyer
+  WHERE YEAR(date_of_birth) > 1980
+) AS recent_lawyers;
+
+USE Theatre
+SELECT * 
+FROM (
+  SELECT 
+    first_name, 
+    last_name, 
+    date_of_birth, 
+    number_phone 
+  FROM dbo.Director
+  WHERE number_phone LIKE '8%'
+) AS number_with_8;
+
 --d) Написать запрос вида SELECT * FROM table JOIN (подзапрос) ON …--
+USE [Criminal law]
+SELECT * 
+FROM dbo.Recidivist AS R
+JOIN (
+  SELECT 
+    prison, 
+    recidivist_id 
+  FROM dbo.Incarceration
+) AS I ON R.recidivist_id = I.recidivist_id;
+
+USE Theatre
+SELECT * 
+FROM dbo.Play AS P
+JOIN (
+  SELECT 
+    author_id, 
+    first_name, 
+    last_name 
+  FROM dbo.Author
+) AS A ON P.author_id = A.author_id;
