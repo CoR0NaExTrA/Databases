@@ -39,12 +39,12 @@ VALUES
 
 INSERT INTO dbo.Incarceration
 VALUES
-	('16/03/2020', '16/03/2025', 'Dark Canyon', '6'),
-	('23/02/2010', '23/02/2014', 'Black Crypt', '1'),
-	('18/05/2015', '18/05/2017', 'Black Crypt', '5'),
-	('10/04/2016', '10/04/2020', 'Rocky Cliff', '1'),
-	('22/03/2014', '22/03/2021', 'Dark Canyon', '4'),
-	('27/02/2013', '27/02/2028', 'Fortress of Fortua', '3');
+	('16/03/2020', '16/03/2025', 'Dark Canyon', '6', '1'),
+	('23/02/2010', '23/02/2014', 'Black Crypt', '1', '2'),
+	('18/05/2015', '18/05/2017', 'Black Crypt', '5', '3'),
+	('10/04/2016', '10/04/2020', 'Rocky Cliff', '1', '4'),
+	('22/03/2014', '22/03/2021', 'Dark Canyon', '4', '5'),
+	('27/02/2013', '27/02/2028', 'Fortress of Fortua', '3', '6');
 
 SELECT * FROM dbo.Article;
 SELECT * FROM dbo.Crime;
@@ -154,19 +154,19 @@ VALUES
 
 INSERT INTO dbo.Author (first_name, last_name, number_phone, award)
 VALUES
-	('Merna', 'Campbel', '01/08/1965', '623822', 'Golden Feather');
+	('Merna', 'Campbel', '623822', 'Golden Feather');
 
 INSERT INTO dbo.Play (title, creating_at)
 VALUES
-	('Mortal', '22/07/1995', '7');
+	('Mortal', '22/07/1995');
 
-INSERT INTO dbo.Performance (title, style, premiere_at, actor_id, play_id)
+INSERT INTO dbo.Performance (title, style, premiere_at, role_id, play_id)
 VALUES
 	('Mortal fear', 'drama', '20/04/2025', '5', '7');
 
 INSERT INTO dbo.Theatre (title, number_phone, performance_id)
 VALUES
-	('Shoumas', 'dramatic', '328195', '7');
+	('Shoumas', '328195', '7');
 
 SELECT * FROM dbo.Actor;
 SELECT * FROM dbo.Author;
@@ -523,7 +523,8 @@ SELECT
     d.first_name AS director_first_name, 
     d.last_name AS director_last_name
 FROM dbo.Performance p
-LEFT JOIN dbo.Actor a ON p.actor_id = a.actor_id
+LEFT JOIN dbo.[Role] r ON p.role_id = r.role_id
+LEFT JOIN dbo.Actor a ON r.actor_id = a.actor_id
 LEFT JOIN dbo.Director d ON p.director_id = d.director_id
 WHERE p.style = 'ballet' 
   AND a.first_name = 'Michael' 
